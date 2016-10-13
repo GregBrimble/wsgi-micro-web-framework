@@ -5,13 +5,13 @@ http://anandology.com/blog/how-to-write-a-web-framework-in-python/
 
 Written confirmation was attained by electronic mail on Mon, 15 Aug 2016 17:22:10 from Anand Chitipothu to use the software under an MIT license.
 
-# To Do
+## To Do
 Handle pages more elegantly. I want to be able to import from all pages from a module, and automatically delegate to the relevant functions, where each function handles the HTTP request method.
 
-# Dependencies
+## Dependencies
 [requests](https://github.com/kennethreitz/requests)
 
-# Usage
+## Usage
 Where appropriate (usually the web root), create `passenger_wsgi.py`. An example file is below.
 
 ```python
