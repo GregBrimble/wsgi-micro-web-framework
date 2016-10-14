@@ -15,32 +15,31 @@ Handle pages more elegantly. I want to be able to import from all pages from a m
 Where appropriate (usually the web root), create `passenger_wsgi.py`. An example file is below.
 
 ```python
-from webframework import wsgiapp
+from wsgi_micro_web_framework import wsgiapp
 
 def log_function(error_message):
-  # Do some logging
+    # Do some logging
 
 def index(self, app, method):
-  app.header("Content-Type", "text/html")
-  app.content = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>"
-  app.status = "200 OK"
+    app.header("Content-Type", "text/html")
+    app.content = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>"
+    app.status = "200 OK"
 
 class application(wsgiapp):
-
-  enforce_https = True
-  urls = {}
-  urls["/"] = "index"
-  log = log_function
+    enforce_https = True
+    urls = {}
+    urls["/"] = "index"
+    log = log_function
 	
-  index = index
+    index = index
 	
-  def not_found(self):
-    self.header("Content-Type", "text/plain")
-    self.content = "<html><head><title>404 Not Found</title></head><body><h1>Uh oh!</h1><h2>You're lost!</h2></body></html>"
-    self.status = "404 Not Found"
-		
-  def internal_server_error(self):
-    self.header("Content-Type", "text/plain")
-    self.content = "Internal Server Error. Greg has been notified. If you have the time, please send him an email saying what happened at developer@gregbrimble.com. Thanks!"
-    self.status = "500 Internal Server Error"
+    def not_found(self):
+        self.header("Content-Type", "text/plain")
+        self.content = "<html><head><title>404 Not Found</title></head><body><h1>Uh oh!</h1><h2>You're lost!</h2></body></html>"
+        self.status = "404 Not Found"
+	
+    def internal_server_error(self):
+        self.header("Content-Type", "text/plain")
+        self.content = "Internal Server Error. Greg has been notified. If you have the time, please send him an email saying what happened at developer@gregbrimble.com. Thanks!"
+        self.status = "500 Internal Server Error"
 ```
