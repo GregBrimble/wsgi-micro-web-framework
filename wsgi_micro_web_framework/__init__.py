@@ -74,8 +74,14 @@ class wsgiapp:
                 
                 if matches[:len(namespace.route)] == namespace.route:
                     namespace_instance = namespace(self, matches[len(namespace.route):])
-                    method_function = getattr(namespace_instance, method.lower())
-                    method_function()
-                    return
+                    
+                    try:
+                        method_function = getattr(namespace_instance, method.lower())
+                        method_function()
+                        return
+                    
+                    except:
+                        self.not_implemented()
+                        return
             
             self.not_found()
