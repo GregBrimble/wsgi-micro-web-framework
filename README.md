@@ -62,7 +62,7 @@ class application(wsgiapp):
     ]
     
     def not_found(self):
-        self.header("Content-Type", "text/plain")
+        self.header("Content-Type", "text/html")
         self.content = "<html><head><title>404 Not Found</title></head><body><h1>Uh oh!</h1><h2>You're lost!</h2></body></html>"
         self.status = "404 Not Found"
 	
