@@ -9,53 +9,56 @@ Written confirmation was attained by electronic mail on Mon, 15 Aug 2016 17:22:1
 Handle pages more elegantly. I want to be able to import from all pages from a module, and automatically delegate to the relevant functions, where each function handles the HTTP request method.
 
 ## Dependencies
-[requests](https://github.com/kennethreitz/requests)
+[Python Requests: HTTP for Humans](https://github.com/kennethreitz/requests)
 
 ## Usage
 Where appropriate (usually the web root), create `passenger_wsgi.py`. An example file is below.
 
 ```python
 from wsgi_micro_web_framework import wsgiapp
-from pages.blog import blog
 
+# Can be imported from an external file
 class index:
-	
-	route = ["index"]
-	
-	def __init__(self, app, arguments):
-		self.app = app
-		self.arguments = arguments
-	
-	def get(self):
-		self.app.header("Content-Type", "text/html")
-		self.app.content = "<html><head><title>Homepage</title></head><body><h1>Welcome</h1></body></html>"
-		self.app.status = "200 OK"
+    
+    # This array holds a routing pattern for the URL to match, in order to delegate to this class.
+    # Please note: an "index" class can be viewed from www.domain.com. There is an clause to pass any lack of path, to "index".
+    route = ["index"]
+    
+    # The wsgiapp is passed in as a parameter when the class is initialised. POST/GET data etc. can be extracted from it as normal.
+    # The arguments parameter is similar to the "route" array above. However, it contains the full URL path.
+    def __init__(self, app, arguments):
+        self.app = app
+        self.arguments = arguments
+    
+    def get(self):
+        self.app.header("Content-Type", "text/html")
+        self.app.content = "<html><head><title>Homepage</title></head><body><h1>Welcome</h1></body></html>"
+        self.app.status = "200 OK"
 
+# Likewise, can be imported.
 class blog:
-	
-	route = ["blog"]
-	
-	def __init__(self, app, arguments):
-			self.app = app
-			self.arguments = arguments
-	
-	def get(self):
-		self.app.header("Content-Type", "text/plain")
-		self.app.content = "Article Number: " + str(self.arguments)
-		self.app.status = "200 OK"
+    
+    # Similarly as above, but with an extra layer, this class is viewed at www.domain.com/blog/view/any_additional_arguments
+    route = ["blog", "view"]
+    
+    def __init__(self, app, arguments):
+        self.app = app
+        self.arguments = arguments
+    
+    def get(self):
+        self.app.header("Content-Type", "text/plain")
+        self.app.content = "Article Number: " + str(self.arguments) # ["blog", "view", "any_additional_arguments"]
+        self.app.status = "200 OK"
 
 def log_function(error_message):
     # Do some logging
-
-def index(self, app, method):
-    app.header("Content-Type", "text/html")
-    app.content = "<html><head><title>Hello, world!</title></head><body><h1>Hello, world!</h1></body></html>"
-    app.status = "200 OK"
 
 class application(wsgiapp):
 
     enforce_https = True
     log = log_function
+    
+    # Adds the page classes to the delegator.
     routes = [
         index,
         blog,
