@@ -16,6 +16,33 @@ Where appropriate (usually the web root), create `passenger_wsgi.py`. An example
 
 ```python
 from wsgi_micro_web_framework import wsgiapp
+from pages.blog import blog
+
+class index:
+	
+	route = ["index"]
+	
+	def __init__(self, app, arguments):
+		self.app = app
+		self.arguments = arguments
+	
+	def get(self):
+		self.app.header("Content-Type", "text/html")
+		self.app.content = "<html><head><title>Homepage</title></head><body><h1>Welcome</h1></body></html>"
+		self.app.status = "200 OK"
+
+class blog:
+	
+	route = ["blog"]
+	
+	def __init__(self, app, arguments):
+			self.app = app
+			self.arguments = arguments
+	
+	def get(self):
+		self.app.header("Content-Type", "text/plain")
+		self.app.content = "Article Number: " + str(self.arguments)
+		self.app.status = "200 OK"
 
 def log_function(error_message):
     # Do some logging
@@ -26,13 +53,14 @@ def index(self, app, method):
     app.status = "200 OK"
 
 class application(wsgiapp):
+
     enforce_https = True
-    urls = {}
-    urls["/"] = "index"
     log = log_function
-	
-    index = index
-	
+    routes = [
+        index,
+        blog,
+    ]
+    
     def not_found(self):
         self.header("Content-Type", "text/plain")
         self.content = "<html><head><title>404 Not Found</title></head><body><h1>Uh oh!</h1><h2>You're lost!</h2></body></html>"
