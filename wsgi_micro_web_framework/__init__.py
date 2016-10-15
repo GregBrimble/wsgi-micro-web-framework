@@ -30,49 +30,52 @@ __email__ = "developer@gregbrimble.com"
 __status__ = "Production"
 
 class wsgiapp:
-	
-	def __init__(self, environ, start_response):
-		self.environ = environ
-		self.start = start_response
-		self._headers = []
-		
-	def header(self, name, value):
-		self._headers.append((name, value))
-			
-	def __iter__(self):
-		try:
-			self.delegate()
-		except:
-			self.log(traceback.format_exc())
-			self.internal_server_error()
-			
-		self.start(self.status, self._headers)
-		
-		if self.content is None:
-			return iter([""])
-		
-		if isinstance(self.content, str):
-			return iter([self.content])
-		else:
-			return iter(self.content)
+    
+    def __init__(self, environ, start_response):
+        self.environ = environ
+        self.start = start_response
+        self._headers = []
+    
+    def header(self, name, value):
+        self._headers.append((name, value))
+    	
+    def __iter__(self):
+        try:
+            self.delegate()
+        except:
+            self.log(traceback.format_exc())
+            self.internal_server_error()
+        	
+        self.start(self.status, self._headers)
+        
+        if self.content is None:
+            return iter([""])
+        
+        if isinstance(self.content, str):
+            return iter([self.content])
+        else:
+            return iter(self.content)
 
-	def delegate(self):
-		path = self.environ['PATH_INFO']
-		method = self.environ['REQUEST_METHOD']
-		
-		if self.enforce_https and (self.environ['wsgi.url_scheme'] != 'https'):
-			self.header("Location", "https://" + self.environ['SERVER_NAME'] + self.environ['REQUEST_URI'])
-			self.status = "303 See Other"
-			self.content = None
-			return
-		else:
-			for namespace in self.routes:
-				matches = re.findall("/([^/]*)", path)
-				if matches[0] == "":
-					matches[0] = "index"
-				if matches[:len(namespace.route)] == namespace.route:
-					namespace_instance = namespace(self, matches[len(namespace.route):])
-					method_function = getattr(namespace_instance, method.lower())
-					method_function()
-					return
-			self.not_found()
+    def delegate(self):
+        path = self.environ['PATH_INFO']
+        method = self.environ['REQUEST_METHOD']
+        
+        if self.enforce_https and (self.environ['wsgi.url_scheme'] != 'https'):
+            self.header("Location", "https://" + self.environ['SERVER_NAME'] + self.environ['REQUEST_URI'])
+            self.status = "303 See Other"
+            self.content = None
+            return
+        else:
+            for namespace in self.routes:
+                matches = re.findall("/([^/]*)", path)
+                
+                if matches[0] == "":
+                    matches[0] = "index"
+                
+                if matches[:len(namespace.route)] == namespace.route:
+                    namespace_instance = namespace(self, matches[len(namespace.route):])
+                    method_function = getattr(namespace_instance, method.lower())
+                    method_function()
+                    return
+            
+            self.not_found()
