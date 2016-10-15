@@ -70,4 +70,9 @@ class application(wsgiapp):
         self.header("Content-Type", "text/plain")
         self.content = "Internal Server Error. Greg has been notified. If you have the time, please send him an email saying what happened at developer@gregbrimble.com. Thanks!"
         self.status = "500 Internal Server Error"
+
+    def not_implemented(self):
+        self.header("Content-Type", "text/plain")
+	self.content = "Woah. You used a HTTP request I haven't implemented yet. Give it time. If you need it, send me an email at hello@gregbrimble.com, and I'll see what I can do."
+	self.status = "501 Not Implemented"
 ```
