@@ -5,9 +5,6 @@ http://anandology.com/blog/how-to-write-a-web-framework-in-python/
 
 Written confirmation was attained by electronic mail on Mon, 15 Aug 2016 17:22:10 from Anand Chitipothu to use the software under an MIT license.
 
-## To Do
-Handle pages more elegantly. I want to be able to import from all pages from a module, and automatically delegate to the relevant functions, where each function handles the HTTP request method.
-
 ## Dependencies
 [Python Requests: HTTP for Humans](https://github.com/kennethreitz/requests)
 
