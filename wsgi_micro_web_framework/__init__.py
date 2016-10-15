@@ -66,12 +66,13 @@ class wsgiapp:
 			self.content = None
 			return
 		else:
-			for pattern, name in self.urls.items():
-				match_object = re.match('^' + pattern + '$', path)
-				if match_object is not None:
-					arguments = match_object.groups()
-					function = getattr(self, name)
-					function(self, method, *arguments)
+			for namespace in self.routes:
+				matches = re.findall("/([^/]*)", path)
+				if matches[0] == "":
+					matches[0] = "index"
+				if matches[:len(namespace.route)] == namespace.route:
+					namespace_instance = namespace(self, matches[len(namespace.route):])
+					method_function = getattr(namespace_instance, method.lower())
+					method_function()
 					return
-						
-			return self.not_found()
+			self.not_found()
