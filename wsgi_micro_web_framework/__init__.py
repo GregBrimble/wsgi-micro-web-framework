@@ -24,7 +24,7 @@ __copyright__ = "Copyright (c) 2016 Greg Brimble"
 __credits__ = ["Greg Brimble", "Anand Chitipothu"]
 
 __license__ = "MIT License"
-__version__ = "1.0"
+__version__ = "0.1"
 __maintainer__ = "Greg Brimble"
 __email__ = "developer@gregbrimble.com"
 __status__ = "Production"
